@@ -20,7 +20,7 @@ jobs:
     - name: cd repo
       run: cd AWSServerless1
     - name: Restore dependencies
-      run: dotnet restore -s AWSServerless1.csproj
+      run: dotnet restore
     - name: Test
       run: dotnet test -s AWSServerless1.csproj --no-build --verbosity normal
     - name: Build

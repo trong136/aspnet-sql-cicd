@@ -1,0 +1,28 @@
+name: .NET
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.x
+    - name: cd repo
+      run: cd WebApplication1
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
+    - name: Build
+      run: dotnet lambda deploy-serverless --region $REGION --aws-access-key-id $AWS_ACCESS_KEY_ID --aws-secret-key $AWS_SECRET_KEY -f netcoreapp3.1 --stack-name $STACK_NAME --s3-bucket $S3_BUCKET -c release
+

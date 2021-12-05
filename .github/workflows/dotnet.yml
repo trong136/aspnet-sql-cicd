@@ -23,4 +23,4 @@ jobs:
     - name: setup lambda
       run: dotnet tool install -g Amazon.Lambda.Tools
     - name: Build
-      run: dotnet lambda deploy-serverless $STACK_NAME --region $REGION --aws-access-key-id $AWS_ACCESS_KEY_ID --aws-secret-key $AWS_SECRET_KEY -c release -f netcoreapp3.1 -sb $S3_BUCKET -t $TEMPLATE
+      run: dotnet lambda deploy-serverless $STACK_NAME --region $REGION --aws-access-key-id $AWS_ACCESS_KEY_ID --aws-secret-key $AWS_SECRET_KEY -c release -f netcoreapp3.1 -sb $S3_BUCKET -t $TEMPLATE -sn $STACK_NAME

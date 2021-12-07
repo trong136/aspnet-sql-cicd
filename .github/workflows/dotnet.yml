@@ -5,22 +5,36 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-
+  workflow_dispatch:
+    inputs:
+      release:
+        description: 'Description'     
+        required: true
+        default: 'release'
 jobs:
   build:
-
+    environment: Staging 
     runs-on: ubuntu-latest
 
-
     steps:
+    - run: echo "Release Description:${{ github.event.inputs.logLevel }}"
     - uses: actions/checkout@v2
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.x
-    - name: cd repo
+    - name: cd api source
       run: cd AWSServerless1
+    - name: dotnet restore
+      run: dotnet restore AWSServerless1/AWSServerless1.csproj
     - name: setup lambda
       run: dotnet tool install -g Amazon.Lambda.Tools
-    - name: Build
-      run: dotnet lambda deploy-serverless $STACK_NAME --region $REGION --aws-access-key-id $AWS_ACCESS_KEY_ID --aws-secret-key $AWS_SECRET_KEY -c release -f netcoreapp3.1 -sb $S3_BUCKET
+    - name: Deploy to Lambda
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+        AWS_S3_BUCKET: ${{ secrets.S3_BUCKET }}
+        REGION: ${{secrets.REGION}}
+        STACK_NAME: ${{secrets.STACK_NAME}}
+        TEMPLATE: ${{secrets.TEMPLATE}}
+      run: dotnet lambda deploy-serverless $STACK_NAME --region $REGION --aws-access-key-id $AWS_ACCESS_KEY_ID --aws-secret-key $AWS_SECRET_KEY -c release -f netcoreapp3.1 -sb $AWS_S3_BUCKET -t AWSServerless1/serverless.template

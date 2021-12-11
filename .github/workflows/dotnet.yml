@@ -18,13 +18,14 @@ jobs:
     outputs:
       server: ${{ steps.set-env.outputs.env }}
     steps:
-      - uses: actions/checkout@v2
       - name: Set env vars (dev)
         if: endsWith(github.ref, '/develop')
+        run: echo "Staging selected"
         env:
           SERVER: Staging
       - name: Set env vars (prod)
         if: endsWith(github.ref, '/main')
+        run: echo "Staging selected"
         env:
           SERVER: Prod
       - id: set-env

@@ -2,9 +2,9 @@ name: .NET
 
 on:
   push:
-    branches: [ main ]
+    branches: [ develop, main ]
   pull_request:
-    branches: [ main ]
+    branches: [ develop, main ]
   workflow_dispatch:
     inputs:
       release:
@@ -13,7 +13,7 @@ on:
         default: 'release'
 jobs:
   build:
-    environment: Prod 
+    environment: Staging 
     runs-on: ubuntu-latest
 
     steps:

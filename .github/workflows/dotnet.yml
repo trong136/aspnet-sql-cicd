@@ -12,6 +12,7 @@ on:
         required: true
         default: 'release'
 jobs:
+
   SelectEnvironment:
     name: Select environment to deploy
     runs-on: ubuntu-latest

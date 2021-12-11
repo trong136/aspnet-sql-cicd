@@ -2,9 +2,9 @@ name: .NET
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, develop ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, develop ]
   workflow_dispatch:
     inputs:
       release:
@@ -12,12 +12,19 @@ on:
         required: true
         default: 'release'
 jobs:
-  build:
-    environment: Prod 
+  deployment:
+    name: deploy to Lambda
     runs-on: ubuntu-latest
-
+ 
     steps:
-    - run: echo "Release Description:${{ github.event.inputs.logLevel }}"
+    - name: Configure AWS credentials
+      if: github.ref == 'refs/heads/main'
+      run: Environment = "Prod"
+
+    - name: Configure AWS credentials
+      if: github.ref == 'refs/heads/develop'
+      run: Environment = "Staging"
+
     - uses: actions/checkout@v2
     - name: Setup .NET
       uses: actions/setup-dotnet@v1

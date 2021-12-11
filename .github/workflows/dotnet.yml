@@ -1,6 +1,4 @@
 name: .NET
-env:
-  SERVER: production
 on:
   push:
     branches: [ main, develop ]

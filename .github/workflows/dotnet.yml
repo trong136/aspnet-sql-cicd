@@ -11,7 +11,8 @@ on:
         required: true
         default: 'release'
 jobs:
-  SelectEnv:
+  SelectEnvironment:
+    name: Select environment to deploy
     runs-on: ubuntu-latest
     steps:
       - name: Set env vars (dev)
@@ -21,7 +22,7 @@ jobs:
         if: endsWith(github.ref, '/main')
         run: echo "SERVER=Prod" >> $GITHUB_ENV
 
-  DeployStaging:
+  Deploy:
     name: Deploy
     runs-on: ubuntu-latest
     environment: $SERVER

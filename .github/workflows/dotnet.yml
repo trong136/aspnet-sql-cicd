@@ -1,4 +1,7 @@
 name: .NET
+env: 
+  SERVER: none
+
 on:
   push:
     branches: [ main, develop ]

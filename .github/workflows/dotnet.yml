@@ -13,7 +13,7 @@ on:
         default: 'release'
 jobs:
   build:
-    environment: Staging 
+    environment: Prod 
     runs-on: ubuntu-latest
 
     steps:

@@ -15,19 +15,26 @@ jobs:
   SelectEnvironment:
     name: Select environment to deploy
     runs-on: ubuntu-latest
+    outputs:
+      server: ${{ steps.set-env.outputs.env }}
     steps:
       - name: Set env vars (dev)
         if: endsWith(github.ref, '/develop')
-        run: echo "SERVER=Staging" >> $GITHUB_ENV
+        env:
+          SERVER: Staging
       - name: Set env vars (prod)
         if: endsWith(github.ref, '/main')
-        run: echo "SERVER=Prod" >> $GITHUB_ENV
+        env:
+          SERVER: Prod
+      - id: set-env
+        name: set output environment
+        run: echo "::set-output name=env::$SERVER" 
 
   Deploy:
     needs: SelectEnvironment
     name: Deploy
     runs-on: ubuntu-latest
-    environment: $SERVER
+    environment: ${{needs.SelectEnvironment.outputs.server}}
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET

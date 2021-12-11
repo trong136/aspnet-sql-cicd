@@ -12,13 +12,38 @@ on:
         required: true
         default: 'release'
 jobs:
+  matrix_prep:
+    # Using a separate job and agent so as to be able to use tools like 'sed' and 'jq'
+    runs-on: ubuntu-latest
+    # Defining outputs of a job allows for easier consumption and use
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+    # Checking out code as the set-matrix step utilizes a file named matrix_includes.json
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v2
+    # This step is explained more in a following section
+    - id: set-matrix
+      run: |
+        branchName=$(echo '${{ github.ref }}' | sed 's,refs/heads/,,g')  
+        matrix=$(jq --arg branchName "$branchName" 'map(. | select((.runOn==$branchName) or (.runOn=="always")) )' matrix_includes.json)                
+        echo ::set-output name=matrix::{\"include\":$(echo $matrix)}\"
+  build-n-test:
+    # By stating 'needs' here, the output of 'matrix_prep' is available to this job
+    needs: matrix_prep
+    runs-on: ${{ matrix.runs_on }}
+    strategy:
+      # We need to convert the json string output into an object that the GitHub Workflow expects.
+      # Thankfully, the json-schema for Workflows allows 'matrix' to be set to an expression.
+      matrix: ${{fromJson(needs.matrix_prep.outputs.matrix)}}
+    steps:
+    # Output a configuration specific value as proof and as a sanity check
+    - run: echo "Hello ${{ matrix.someValue }}"
+
   DeployStaging:
     name: Deploy to Staging
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        env: [staging, prod]
-    if: github.ref == 'refs/heads/develop' && matrix.env == 'staging'
+    if: github.ref == 'refs/heads/develop'
     environment: ${{ matrix.env }}
     steps:
     - uses: actions/checkout@v2

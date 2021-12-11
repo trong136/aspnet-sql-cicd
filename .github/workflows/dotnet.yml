@@ -24,6 +24,7 @@ jobs:
         run: echo "SERVER=Prod" >> $GITHUB_ENV
 
   Deploy:
+    needs: SelectEnvironment
     name: Deploy
     runs-on: ubuntu-latest
     environment: $SERVER

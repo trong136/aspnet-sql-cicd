@@ -25,7 +25,7 @@ jobs:
           SERVER: Staging
       - name: Set env vars (prod)
         if: endsWith(github.ref, '/main')
-        run: echo "Staging selected"
+        run: echo "Prod selected"
         env:
           SERVER: Prod
       - id: set-env

@@ -2,9 +2,9 @@ name: .NET
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, develop ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, develop ]
   workflow_dispatch:
     inputs:
       release:
@@ -12,12 +12,33 @@ on:
         required: true
         default: 'release'
 jobs:
-  build:
-    environment: Staging 
-    runs-on: ubuntu-latest
 
+  SelectEnvironment:
+    name: Select environment to deploy
+    runs-on: ubuntu-latest
+    outputs:
+      server: ${{ steps.set-env.outputs.env }}
     steps:
-    - run: echo "Release Description:${{ github.event.inputs.logLevel }}"
+      - name: Set env vars (dev)
+        if: endsWith(github.ref, '/develop')
+        run: echo "Staging selected"
+        env:
+          SERVER: Staging
+      - name: Set env vars (prod)
+        if: endsWith(github.ref, '/main')
+        run: echo "Prod selected"
+        env:
+          SERVER: Prod
+      - id: set-env
+        name: set output environment
+        run: echo "::set-output name=env::$SERVER" 
+
+  Deploy:
+    needs: SelectEnvironment
+    name: Deploy
+    runs-on: ubuntu-latest
+    environment: ${{needs.SelectEnvironment.outputs.server}}
+    steps:
     - uses: actions/checkout@v2
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
@@ -37,4 +58,4 @@ jobs:
         REGION: ${{secrets.REGION}}
         STACK_NAME: ${{secrets.STACK_NAME}}
         TEMPLATE: ${{secrets.TEMPLATE}}
-      run: dotnet lambda deploy-serverless $STACK_NAME --region $REGION --aws-access-key-id $AWS_ACCESS_KEY_ID --aws-secret-key $AWS_SECRET_KEY -c release -f netcoreapp3.1 -sb $AWS_S3_BUCKET -t AWSServerless1/serverless.template
+      run: dotnet lambda deploy-serverless $STACK_NAME --region $REGION --aws-access-key-id $AWS_ACCESS_KEY_ID --aws-secret-key $AWS_SECRET_KEY -c release -f netcoreapp3.1 -sb $AWS_S3_BUCKET -t $TEMPLATE

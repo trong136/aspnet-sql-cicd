@@ -1,4 +1,4 @@
-name: .NET
+name: Send the builed of DB file to AWS Code Pipeline 
 
 on:
   push:
@@ -15,10 +15,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 3.1.x
     - name: Build DB project
       run: dotnet build Database1.Build/Database1.Build.csproj
     - run: |

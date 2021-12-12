@@ -14,7 +14,6 @@ jobs:
     runs-on: windows-2016
 
     steps:
-    - uses: actions/checkout@v2
     - name: Build DB project
       run: dotnet build Database1.Build/Database1.Build.csproj
     - run: |

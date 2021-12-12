@@ -11,7 +11,7 @@ jobs:
     env:
       DBPath: Database1.Build/Database1.Build.csproj
       DacpacOutput: Database1.Build/debug/bin/
-    runs-on: windows-2016
+    runs-on: windows-latest
 
     steps:
     - uses: actions/checkout@v2

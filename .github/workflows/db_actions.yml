@@ -18,9 +18,7 @@ jobs:
     - name: Build DB project
       run: dotnet build Database1.Build/Database1.Build.csproj
     - run: |
-        cd Database1.Build
-        cd debug
-        cd bin
+        cd Database1.Build/bin/Debug/netstandard2.0
         dir
     
 

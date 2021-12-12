@@ -16,11 +16,10 @@ on:
   
 jobs:
   build:
+    runs-on: windows-latest
     env:
       DBPath: Database1.Build/Database1.Build.csproj
       DacpacOutput: Database1.Build/bin/Debug/netstandard2.0
-    runs-on: windows-latest
-
     steps:
     - uses: actions/checkout@v2
     - name: Build DB project

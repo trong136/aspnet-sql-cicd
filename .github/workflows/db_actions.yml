@@ -44,7 +44,6 @@ jobs:
     - name: Build DB project
       run: dotnet build Database1.Build/Database1.Build.csproj
     - run: |
-        aws --version
         cd Database1.Build/bin/Debug/netstandard2.0
         dir
     - name: Zip output
@@ -54,12 +53,12 @@ jobs:
     - name: send to aws s3
       env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
           AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET_DB_OUTPUT }}
           REGION: ${{secrets.REGION}}
       run: |
-          aws s3 cp \
-          --region $REGION \
+          aws s3 cp /
+          --region $REGION /
           db.zip s3://$AWS_S3_BUCKET/db.zip
 
 

@@ -10,11 +10,15 @@ on:
     branches: [ main ]
     paths:
       - 'Database1/**'
+      
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+  
 jobs:
   build:
     env:
       DBPath: Database1.Build/Database1.Build.csproj
-      DacpacOutput: Database1.Build/debug/bin/
+      DacpacOutput: Database1.Build\bin\Debug\netstandard2.0
     runs-on: windows-latest
 
     steps:
@@ -24,5 +28,11 @@ jobs:
     - run: |
         cd Database1.Build/bin/Debug/netstandard2.0
         dir
-    
+    - name: Install zip
+      uses: montudor/action-zip@v1
+    - name: Zip output
+      run: | 
+        zip -qq -r ~/$DacpacOutput.zip .
+        dir
+
 

@@ -18,19 +18,19 @@ jobs:
   build:
     env:
       DBPath: Database1.Build/Database1.Build.csproj
-      DacpacOutput: Database1.Build\bin\Debug\netstandard2.0
+      DacpacOutput: Database1.Build/bin/Debug/netstandard2.0
     runs-on: windows-latest
 
     steps:
     - uses: actions/checkout@v2
     - name: Build DB project
-      run: dotnet build Database1.Build/Database1.Build.csproj
+      run: dotnet build $DBPath
     - run: |
         cd Database1.Build/bin/Debug/netstandard2.0
         dir
     - name: Zip output
       run: | 
-        tar.exe -a -c -f db.zip Database1.Build.Dacpac
+        tar.exe -a -c -f db.zip $DacpacOutput/Database1.Build.Dacpac
         dir
 
 

@@ -17,19 +17,16 @@ on:
 jobs:
   build:
     runs-on: windows-latest
-    env:
-      DBPath: Database1.Build/Database1.Build.csproj
-      DacpacOutput: Database1.Build/bin/Debug/netstandard2.0
     steps:
     - uses: actions/checkout@v2
     - name: Build DB project
-      run: dotnet build $DBPath
+      run: dotnet build Database1.Build/Database1.Build.csproj
     - run: |
         cd Database1.Build/bin/Debug/netstandard2.0
         dir
     - name: Zip output
       run: | 
-        tar.exe -a -c -f db.zip $DacpacOutput/Database1.Build.Dacpac
+        tar.exe -a -c -f db.zip Database1.Build/bin/Debug/netstandard2.0/Database1.Build.Dacpac
         dir
 
 

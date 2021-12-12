@@ -1,0 +1,28 @@
+name: Build Database
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'Database1/**'
+      
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'Database1/**'
+jobs:
+  build:
+    env:
+      DBPath: Database1.Build/Database1.Build.csproj
+      DacpacOutput: Database1.Build/debug/bin/
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build DB project
+      run: dotnet build Database1.Build/Database1.Build.csproj
+    - run: |
+        cd Database1.Build/bin/Debug/netstandard2.0
+        dir
+    
+

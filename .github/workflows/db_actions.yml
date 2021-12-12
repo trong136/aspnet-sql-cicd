@@ -1,11 +1,15 @@
-name: Send the builed of DB file to AWS Code Pipeline 
+name: Build Database
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, develop ]
+    paths:
+      - 'Database1/**'
+      
   pull_request:
     branches: [ main ]
-
+    paths:
+      - 'Database1/**'
 jobs:
   build:
     env:

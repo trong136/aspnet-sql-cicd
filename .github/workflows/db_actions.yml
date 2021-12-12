@@ -20,7 +20,7 @@ jobs:
       with:
         dotnet-version: 3.1.x
     - name: Build DB project
-      run: dotnet build $DBPath
+      run: dotnet build Database1.Build/Database1.Build.csproj
     - run: |
         cd Database1.Build
         cd debug

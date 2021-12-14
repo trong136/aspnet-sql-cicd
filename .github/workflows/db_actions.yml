@@ -51,7 +51,9 @@ jobs:
         tar.exe -a -c -f db.zip Database1.Build/bin/Debug/netstandard2.0/Database1.Build.Dacpac
         dir
     - name: send to aws s3
-      run: aws s3 cp db.zip s3://$AWS_S3_BUCKET/db.zip
+      run: |
+        aws configure list
+        aws s3 cp db.zip s3://database-github-actions-ap-southeast-1/db.zip
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}

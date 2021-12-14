@@ -15,52 +15,48 @@ on:
   workflow_dispatch:
   
 jobs:
-#   SelectEnvironment:
-#     name: Select environment to deploy
-#     runs-on: ubuntu-latest
-#     outputs:
-#       server: ${{ steps.set-env.outputs.env }}
-#     steps:
-#       - name: Set env vars (dev)
-#         if: endsWith(github.ref, '/develop')
-#         run: echo "Staging selected"
-#         env:
-#           SERVER: Staging
-#       - name: Set env vars (prod)
-#         if: endsWith(github.ref, '/main')
-#         run: echo "Prod selected"
-#         env:
-#           SERVER: Prod
-#       - id: set-env
-#         name: set output environment
-#         run: echo "::set-output name=env::$SERVER" 
+  SelectEnvironment:
+    name: Select environment to deploy
+    runs-on: ubuntu-latest
+    outputs:
+      server: ${{ steps.set-env.outputs.env }}
+    steps:
+      - name: Set env vars (dev)
+        if: endsWith(github.ref, '/develop')
+        run: echo "Staging selected"
+        env:
+          SERVER: Staging
+      - name: Set env vars (prod)
+        if: endsWith(github.ref, '/main')
+        run: echo "Prod selected"
+        env:
+          SERVER: Prod
+      - id: set-env
+        name: set output environment
+        run: echo "::set-output name=env::$SERVER" 
 
   build:
-#     needs: SelectEnvironment
-#     environment: ${{needs.SelectEnvironment.outputs.server}}
-    environment: Staging
+    needs: SelectEnvironment
+    environment: ${{needs.SelectEnvironment.outputs.server}}
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
-#     - name: Build DB project
-#       run: dotnet build Database1.Build/Database1.Build.csproj
-#     - run: |
-#         cd Database1.Build/bin/Debug/netstandard2.0
-#         dir
-#     - name: Zip output
-#       run: | 
-#         tar.exe -a -c -f db.zip Database1.Build/bin/Debug/netstandard2.0/Database1.Build.Dacpac
-#         dir
+    - name: Build DB project
+      run: dotnet build Database1.Build/Database1.Build.csproj
+    - run: |
+        cd Database1.Build/bin/Debug/netstandard2.0
+        dir
+    - name: Zip output
+      run: | 
+        tar.exe -a -c -f db.zip Database1.Build/bin/Debug/netstandard2.0/Database1.Build.Dacpac
+        dir
     - name: send to aws s3
-      run: |
-        echo "Hello $FIRST_NAME"
-        aws configure list
+      run: aws s3 cp db.zip s3://$AWS_S3_BUCKET/db.zip
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
         AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET_DB_OUTPUT }}
         AWS_DEFAULT_REGION: ${{ secrets.REGION }}
-        FIRST_NAME: Mona
         
 #       run: aws s3 cp db.zip s3://database-github-actions-ap-southeast-1/db.zip
 

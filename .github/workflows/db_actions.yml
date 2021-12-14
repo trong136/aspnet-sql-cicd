@@ -37,7 +37,7 @@ jobs:
 
   build:
     needs: SelectEnvironment
-    environment: ${{needs.SelectEnvironment.outputs.server}}
+    environment: Staging
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2

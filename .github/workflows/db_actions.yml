@@ -54,9 +54,11 @@ jobs:
       env:
           AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET_DB_OUTPUT }}
       run: |
-        setx AWS_ACCESS_KEY_ID ${{ secrets.AWS_ACCESS_KEY_ID }}
-        setx AWS_SECRET_ACCESS_KEY ${{ secrets.AWS_SECRET_KEY }}
-        setx AWS_DEFAULT_REGION ${{ secrets.REGION }}
+        aws configure
+        AWS Access Key ID [None]: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS Secret Access Key [None]: ${{ secrets.AWS_SECRET_KEY }}
+        Default region name [None]: ${{secrets.REGION}}
+        Default output format [None]: json
         aws configure list
         
 #       run: aws s3 cp --region ap-southeast-1 db.zip s3://database-github-actions-ap-southeast-1/db.zip

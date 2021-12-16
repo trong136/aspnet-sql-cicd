@@ -31,14 +31,10 @@ jobs:
     steps:
       - name: Set env vars (dev)
         if: endsWith(github.ref, '/develop')
-        run: echo "Staging selected"
-        env:
-          SERVER: Staging
+        run: echo "SERVER=Staging" >> $GITHUB_ENV
       - name: Set env vars (prod)
         if: endsWith(github.ref, '/main')
-        run: echo "Prod selected"
-        env:
-          SERVER: Prod
+        run: echo "SERVER=Prod" >> $GITHUB_ENV
       - id: set-env
         name: set output environment
         run: echo "::set-output name=env::$SERVER" 

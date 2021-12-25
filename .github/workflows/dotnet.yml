@@ -9,14 +9,6 @@ on:
       - 'Database1/**'
       - 'Database1.Build/**'
       - '.github/workflows/db_actions.yml'
-  pull_request:
-    branches: [ main, develop ]
-    paths-ignore:
-      - 'WebUI1/**'
-      - 'WebUI2/**'
-      - 'Database1/**'
-      - 'Database1.Build/**'
-      - '.github/workflows/db_actions.yml'
       
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:

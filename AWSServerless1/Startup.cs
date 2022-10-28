@@ -21,6 +21,7 @@ namespace AWSServerless1
 			Configuration = configuration;
 		}
 
+		// Comment 111
 		public static IConfiguration Configuration { get; private set; }
 
 		// This method gets called by the runtime. Use this method to add services to the container
